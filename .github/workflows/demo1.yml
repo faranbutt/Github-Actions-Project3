@@ -1,35 +1,31 @@
-name: Events Demo 1
-on:
-    pull_request: 
-        types: 
-            - opened
-        branches: 
-          - main
-          - 'dev-*'
-          - 'feat/**'
-    push: 
-      branches: 
-        - main
-        - 'dev-*'
-        - 'feat/**'
-      paths-ignore:
-        - '.github/workflows/*'
-        
-    workflow_dispatch: 
+name: Deploy Website
+on: 
+  push: 
+    branches: 
+      - main
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint Code
+        run: npm run lint
+      - name: Test Code
+        run: npm test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Code
+        run: npm run build
   deploy:
     runs-on: ubuntu-latest
     steps:
-        - name: Output event Data
-          run: echo "${{toJson(github.event)}}"
-        - name: Get Code
-          uses: actions/checkout@v4
-        - name: Install dependencies
-          run: npm ci
-        - name: Test Code
-          run: npm test
-        - name: Build Code
-          run: npm run build
-        - name: Deploy Project
-          run: echo "Deploying ..."
-
+      - name: Deploy Code
+        uses: echo "Deplying..."
